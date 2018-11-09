@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta charset="UTF‐8">
+    <title>test‐sdk</title>
+    <script src="js/jquery/jquery.min.js"></script>
+    <script src="js/skytech/callhelper-2.4.2.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('init').addEventListener('click', function () {
+                initSoftPhone();
+            }, false);
+            document.getElementById('makecall').addEventListener('click', function () {
+                var callnum = document.getElementById('tel_num').value.replace(/\s/g, '');
+                CallHelper.invite(callnum, inviteCallback);
+            }, false);
+            document.getElementById('hangup').addEventListener('click', function () {
+                CallHelper.hangup();
+            }, false);
+        }
+
+        /**
+         * 初始化softphone bar
+         */
+        function initSoftPhone() {
+            debugger;
+            var config = {
+                uname: '3898594662@QQ.COM',
+                pwd: '123465',
+                debug: true,
+                isAutoAnswer: true,
+
+                stateListenerCallBack: stateCallback
+            };
+            CallHelper.init(config, initCallback);
+        }
+
+        /**
+         * 设置状态监听回调
+         */
+        function stateCallback(data) {
+            debugger;
+            console.info(data);
+            if (data.msg === "READY") {
+            } else if (data.msg === "RINGING") {
+                document.getElementById('callnum').innerHTML = data.data.callnum;
+            } else if (data.msg === "HANGUP") {
+                document.getElementById('calluuid').innerHTML = '';
+                document.getElementById('msg').innerHTML = '';
+                document.getElementById('callnum').innerHTML = '';
+            }
+        }
+
+        /**
+         * 初始化方法回调是否成功
+         */
+        function initCallback(data) {
+            debugger;
+            console.info(data);
+            if (data.successChange) {
+                //显示本机号码
+                //显示本机号码
+                document.getElementById('agentnum').innerHTML = data.data.agentnumber;
+                //电话条ready状态变更
+                CallHelper.ready();
+            }
+        }
+
+        /**
+         * makecall 外呼回调
+         */
+        function inviteCallback(data) {
+            console.info('callmake callback data is :' + data.state + " msg :" + data.msg);
+            if (data.state === 1) {
+                showUUID(data.msg);
+            } else {
+                document.getElementById('msg').innerHTML = data.msg;
+            }
+        }
+
+        /**
+         * 显示电话uuid
+         */
+        function showUUID(uuid) {
+            document.getElementById('calluuid').innerHTML = uuid;
+        }
+    </script>
+</head>
+<body>
+    <h2>第一步:</h2>
+    <button id="init">初始化</button>
+    <h3>坐席号码: <span id='agentnum'>18317081308</span></h3>
+    <h2>第二步:</h2>
+    <input type="text" id="tel_num" value="18317081308" name="phoneNum"/>
+    <button id="makecall">外拨</button>
+    <button id="hangup">挂机</button>
+    <br/>
+    <h2>第三步:</h2>
+    <h3>电话号码: <span id='callnum'></span></h3>
+    <h3>电话uuid: <span id='calluuid'></span></h3>
+    <h3 id=""><p id='msg'></p></h3>
+</body>
+</html>
