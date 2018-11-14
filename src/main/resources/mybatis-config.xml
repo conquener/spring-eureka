@@ -10,10 +10,9 @@
 
     </settings>
     <typeAliases>
+
         <package name="com.example.springeureka.pojo"/>
+
     </typeAliases>
-    <mappers>
-        <package name="com.example.springeureka.dao"></package>
-    </mappers>
 
 </configuration>

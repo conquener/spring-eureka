@@ -10,4 +10,5 @@
         <include refid="queryFields"/>
         from test
     </select>
+
 </mapper>
